@@ -1,7 +1,9 @@
+import { Currency } from '../enums/currency.enum';
 import { WalletCredentialsDomain } from './wallet.credentials.domain';
 
 export class WalletDomain {
   private readonly _address: string;
+  private readonly _currency: Currency;
   private readonly _balance: number;
   private readonly _createdAt: Date;
   private readonly _updatedAt: Date;
@@ -12,6 +14,10 @@ export class WalletDomain {
 
   get address(): string {
     return this._address;
+  }
+
+  get currency(): Currency {
+    return this._currency;
   }
 
   get balance(): number {
