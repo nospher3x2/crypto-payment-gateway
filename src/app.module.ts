@@ -1,7 +1,8 @@
+import { SharedModule } from '@app/shared';
 import { Module } from '@nestjs/common';
 
 @Module({
-  imports: [],
+  imports: [SharedModule],
   controllers: [],
   providers: [],
 })
