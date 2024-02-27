@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Currency {
+  BTC
+  ETH
+  LTC
+}
+
+model Wallet {
+  id           String   @id @unique @default(uuid())
+  address      String   @unique
+  currency     Currency
+  balance      Decimal  @db.Decimal(20, 10)
+  credentialId String   @unique @map("credentialsId")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  credential WalletCredential @relation(fields: [credentialId], references: [id])
+  orders     Order[]
+}
+
+model WalletCredential {
+  id         String   @id @unique @default(uuid())
+  privateKey String   @unique @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  wallet Wallet?
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  PARTIAL_RECEIVED
+  COMPLETED
+  EXPIRED
+  FAILED
+}
+
+model Order {
+  id            String      @id @unique @default(uuid())
+  status        OrderStatus @default(PENDING)
+  currency      Currency
+  amount        Decimal     @db.Decimal(20, 10)
+  confirmations Int
+  description   String
+  walletId      String
+  externalId    String?
+  expiresAt     DateTime
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  wallet       Wallet        @relation(fields: [walletId], references: [id])
+  transactions Transaction[]
+}
+
+model Transaction {
+  txid          String   @id @unique
+  amount        Decimal  @db.Decimal(20, 10)
+  from          String
+  confirmations Int
+  orderId       String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id])
+}

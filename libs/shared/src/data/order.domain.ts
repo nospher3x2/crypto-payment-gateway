@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import { Currency } from '../enums/currency.enum';
 import { OrderStatus } from '../enums/order.status.enum';
 import { TransactionDomain } from './transaction.domain';
+import { WalletDomain } from './wallet.domain';
 
 export class OrderDomain {
   private readonly _id: string;
@@ -10,9 +11,9 @@ export class OrderDomain {
   private _amount: number;
   private _confirmations: number;
   private _description: string;
-  private _address: string;
-  private _expiresAt: number;
+  private _wallet: WalletDomain;
   private _externalId: string;
+  private _expiresAt: Date;
   private _createdAt: Date;
   private _updatedAt: Date;
 
@@ -68,20 +69,12 @@ export class OrderDomain {
     this._description = description;
   }
 
-  get address(): string {
-    return this._address;
+  get wallet(): WalletDomain {
+    return this._wallet;
   }
 
-  set address(address: string) {
-    this._address = address;
-  }
-
-  get expiresAt(): number {
-    return this._expiresAt;
-  }
-
-  set expiresAt(expiresAt: number) {
-    this._expiresAt = expiresAt;
+  set wallet(wallet: WalletDomain) {
+    this._wallet = wallet;
   }
 
   get externalId(): string {
@@ -90,6 +83,14 @@ export class OrderDomain {
 
   set externalId(externalId: string) {
     this._externalId = externalId;
+  }
+
+  get expiresAt(): Date {
+    return this._expiresAt;
+  }
+
+  set expiresAt(expiresAt: Date) {
+    this._expiresAt = expiresAt;
   }
 
   get createdAt(): Date {

@@ -1,7 +1,8 @@
+import { randomUUID } from 'crypto';
 import { Currency } from '../enums/currency.enum';
-import { WalletCredentialsDomain } from './wallet.credentials.domain';
 
 export class WalletDomain {
+  private readonly _id: string;
   private readonly _address: string;
   private readonly _currency: Currency;
   private readonly _balance: number;
@@ -10,6 +11,14 @@ export class WalletDomain {
 
   constructor(wallet: Partial<WalletDomain>) {
     Object.assign(this, wallet);
+
+    if (this._id === undefined) {
+      this._id = randomUUID();
+    }
+  }
+
+  get id(): string {
+    return this._id;
   }
 
   get address(): string {
@@ -30,17 +39,5 @@ export class WalletDomain {
 
   get updatedAt(): Date {
     return this._updatedAt;
-  }
-}
-
-export class WalletWithCredentialsDomain extends WalletDomain {
-  private readonly _credentials: WalletCredentialsDomain;
-
-  constructor(wallet: Partial<WalletWithCredentialsDomain>) {
-    super(wallet);
-  }
-
-  get credentials(): WalletCredentialsDomain {
-    return this._credentials;
   }
 }

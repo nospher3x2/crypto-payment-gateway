@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { SharedService } from './shared.service';
+import { DatabaseModule } from './database';
 
 @Module({
-  providers: [SharedService],
-  exports: [SharedService],
+  imports: [DatabaseModule],
+  providers: [DatabaseModule],
+  exports: [DatabaseModule],
 })
 export class SharedModule {}
