@@ -1,10 +1,12 @@
 import { randomUUID } from 'crypto';
 import { Currency } from '../enums/currency.enum';
+import { CurrencyNetwork } from '../enums/currency.network.enum';
 
 export class WalletDomain {
   private readonly _id: string;
   private readonly _address: string;
   private readonly _currency: Currency;
+  private readonly _network: CurrencyNetwork<typeof Currency>;
   private readonly _balance: number;
   private readonly _createdAt: Date;
   private readonly _updatedAt: Date;
@@ -27,6 +29,10 @@ export class WalletDomain {
 
   get currency(): Currency {
     return this._currency;
+  }
+
+  get network(): CurrencyNetwork<typeof Currency> {
+    return this._network;
   }
 
   get balance(): number {

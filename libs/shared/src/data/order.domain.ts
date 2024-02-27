@@ -1,5 +1,4 @@
 import { randomUUID } from 'crypto';
-import { Currency } from '../enums/currency.enum';
 import { OrderStatus } from '../enums/order.status.enum';
 import { TransactionDomain } from './transaction.domain';
 import { WalletDomain } from './wallet.domain';
@@ -7,7 +6,6 @@ import { WalletDomain } from './wallet.domain';
 export class OrderDomain {
   private readonly _id: string;
   private _status: OrderStatus;
-  private _currency: Currency;
   private _amount: number;
   private _confirmations: number;
   private _description: string;
@@ -35,14 +33,6 @@ export class OrderDomain {
 
   set status(status: OrderStatus) {
     this._status = status;
-  }
-
-  get currency(): Currency {
-    return this._currency;
-  }
-
-  set currency(currency: Currency) {
-    this._currency = currency;
   }
 
   get amount(): number {
