@@ -54,6 +54,7 @@ model Order {
   id            String      @id @unique @default(uuid())
   status        OrderStatus @default(PENDING)
   currency      Currency
+  network       String
   amount        Decimal     @db.Decimal(20, 10)
   confirmations Int
   description   String

@@ -1,21 +1,33 @@
 import { randomUUID } from 'crypto';
 import { OrderStatus } from '../enums/order.status.enum';
 import { TransactionDomain } from './transaction.domain';
-import { WalletDomain } from './wallet.domain';
 
-export class OrderDomain {
+type OrderDomainProps = {
+  id: string;
+  status: OrderStatus;
+  amount: number;
+  confirmations: number;
+  description: string;
+  walletId: string;
+  externalId: string;
+  expiresAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export class OrderDomain implements OrderDomainProps {
   private readonly _id: string;
   private _status: OrderStatus;
   private _amount: number;
   private _confirmations: number;
   private _description: string;
-  private _wallet: WalletDomain;
+  private _walletId: string;
   private _externalId: string;
   private _expiresAt: Date;
   private _createdAt: Date;
   private _updatedAt: Date;
 
-  constructor(order: Partial<OrderDomain>) {
+  constructor(order: OrderDomainProps) {
     Object.assign(this, order);
 
     if (this._id === undefined) {
@@ -59,12 +71,12 @@ export class OrderDomain {
     this._description = description;
   }
 
-  get wallet(): WalletDomain {
-    return this._wallet;
+  get walletId(): string {
+    return this._walletId;
   }
 
-  set wallet(wallet: WalletDomain) {
-    this._wallet = wallet;
+  set walletId(walletId: string) {
+    this._walletId = walletId;
   }
 
   get externalId(): string {
@@ -100,12 +112,16 @@ export class OrderDomain {
   }
 }
 
+type OrderWithTransactionsDomainProps = OrderDomain & {
+  transactions: TransactionDomain[];
+};
+
 export class OrderWithTransactionsDomain extends OrderDomain {
   private _transactions: TransactionDomain[];
 
-  constructor(order: Partial<OrderWithTransactionsDomain>) {
+  constructor(order: OrderWithTransactionsDomainProps) {
     super(order);
-    this._transactions = [];
+    this._transactions = order.transactions;
   }
 
   get transactions(): TransactionDomain[] {
