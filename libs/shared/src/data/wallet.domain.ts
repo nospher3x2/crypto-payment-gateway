@@ -1,18 +1,7 @@
 import { randomUUID } from 'crypto';
-import { Currency } from '../enums/currency.enum';
-import { CurrencyNetwork } from '../enums/currency.network.enum';
+import { Currency, CurrencyNetwork } from '../enums';
 
-type WalletDomainProps<T extends Currency> = {
-  id: string;
-  address: string;
-  currency: T;
-  network: CurrencyNetwork<T>;
-  balance: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export class WalletDomain<T extends Currency> implements WalletDomainProps<T> {
+export class WalletDomain<T extends Currency> {
   private readonly _id: string;
   private readonly _address: string;
   private readonly _currency: T;
@@ -21,7 +10,7 @@ export class WalletDomain<T extends Currency> implements WalletDomainProps<T> {
   private _createdAt: Date;
   private _updatedAt: Date;
 
-  constructor(wallet: WalletDomainProps<T>) {
+  constructor(wallet: Partial<WalletDomain<T>>) {
     Object.assign(this, wallet);
     if (!this._id) {
       this._id = randomUUID();

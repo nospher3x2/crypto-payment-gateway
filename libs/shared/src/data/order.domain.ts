@@ -1,21 +1,9 @@
 import { randomUUID } from 'crypto';
-import { OrderStatus } from '../enums/order.status.enum';
+import { Currency, OrderStatus } from '@prisma/client';
 import { TransactionDomain } from './transaction.domain';
+import { WalletDomain } from './wallet.domain';
 
-type OrderDomainProps = {
-  id: string;
-  status: OrderStatus;
-  amount: number;
-  confirmations: number;
-  description: string;
-  walletId: string;
-  externalId: string;
-  expiresAt: Date;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export class OrderDomain implements OrderDomainProps {
+export class OrderDomain {
   private readonly _id: string;
   private _status: OrderStatus;
   private _amount: number;
@@ -27,7 +15,7 @@ export class OrderDomain implements OrderDomainProps {
   private _createdAt: Date;
   private _updatedAt: Date;
 
-  constructor(order: OrderDomainProps) {
+  constructor(order: Partial<OrderDomain>) {
     Object.assign(this, order);
 
     if (this._id === undefined) {
@@ -112,16 +100,57 @@ export class OrderDomain implements OrderDomainProps {
   }
 }
 
-type OrderWithTransactionsDomainProps = OrderDomain & {
-  transactions: TransactionDomain[];
-};
+export class OrderWithWalletDomain<T extends Currency> extends OrderDomain {
+  private _wallet: WalletDomain<T>;
+
+  constructor(order: Partial<OrderWithWalletDomain<T>>) {
+    super(order);
+    Object.assign(this, order);
+  }
+
+  get wallet(): WalletDomain<T> {
+    return this._wallet;
+  }
+
+  set wallet(wallet: WalletDomain<T>) {
+    this._wallet = wallet;
+  }
+}
 
 export class OrderWithTransactionsDomain extends OrderDomain {
   private _transactions: TransactionDomain[];
 
-  constructor(order: OrderWithTransactionsDomainProps) {
+  constructor(order: Partial<OrderWithTransactionsDomain>) {
     super(order);
-    this._transactions = order.transactions;
+    this._transactions = order.transactions || [];
+  }
+
+  get transactions(): TransactionDomain[] {
+    return this._transactions;
+  }
+
+  set transactions(transactions: TransactionDomain[]) {
+    this._transactions = transactions;
+  }
+}
+
+export class OrderWithWalletAndTransactionsDomain<
+  T extends Currency,
+> extends OrderDomain {
+  private _wallet: WalletDomain<T>;
+  private _transactions: TransactionDomain[];
+
+  constructor(order: Partial<OrderWithWalletAndTransactionsDomain<T>>) {
+    super(order);
+    Object.assign(this, order);
+  }
+
+  get wallet(): WalletDomain<T> {
+    return this._wallet;
+  }
+
+  set wallet(wallet: WalletDomain<T>) {
+    this._wallet = wallet;
   }
 
   get transactions(): TransactionDomain[] {
