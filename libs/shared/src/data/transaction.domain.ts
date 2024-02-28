@@ -1,14 +1,4 @@
-type TransactionDomainProps = {
-  txid: string;
-  amount: number;
-  from: string;
-  confirmations: number;
-  orderId: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export class TransactionDomain implements TransactionDomainProps {
+export class TransactionDomain {
   private readonly _txid: string;
   private _amount: number;
   private _from: string;
@@ -17,7 +7,7 @@ export class TransactionDomain implements TransactionDomainProps {
   private _createdAt: Date;
   private _updatedAt: Date;
 
-  constructor(transaction: TransactionDomainProps) {
+  constructor(transaction: Partial<TransactionDomain>) {
     Object.assign(this, transaction);
   }
 
