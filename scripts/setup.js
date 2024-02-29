@@ -60,18 +60,13 @@ console.log('Setting up the .env file...');
   rl.close();
 
   const regex = new RegExp(`(?<=\\s)(\\w+)=(.*?)(?=\\s)`, 'g');
-  const env = environment
-    .replace(
-      "# DON'T MODIFY .env.example FILE. YOU NEED GENERATE YOUR API_KEY USING node scripts/setup.js",
-      '',
-    )
-    .replace(regex, (match, key, value) => {
-      if (answers[key]) {
-        return `${key}="${answers[key]}"`;
-      }
+  const env = environment.replace(regex, (match, key, value) => {
+    if (answers[key]) {
+      return `${key}="${answers[key]}"`;
+    }
 
-      return `${key}=${value}`;
-    });
+    return `${key}=${value}`;
+  });
 
   fs.writeFileSync('.env', env);
 })();
