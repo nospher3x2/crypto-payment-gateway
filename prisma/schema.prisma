@@ -23,6 +23,7 @@ model Wallet {
   id           String   @id @unique @default(uuid())
   address      String   @unique
   currency     Currency
+  network      String
   balance      Decimal  @db.Decimal(20, 10)
   credentialId String   @unique @map("credentialsId")
   createdAt    DateTime @default(now())
@@ -54,7 +55,6 @@ model Order {
   id            String      @id @unique @default(uuid())
   status        OrderStatus @default(PENDING)
   currency      Currency
-  network       String
   amount        Decimal     @db.Decimal(20, 10)
   confirmations Int
   description   String
