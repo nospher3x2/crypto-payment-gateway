@@ -1,14 +1,15 @@
 # Crypto Payment Gateway
 
-A simple payment gateway for the most common cryptocurrencies (BTC, ETH, LTC). It allows users to make payments using their cryptocurrency wallets.
+A simple payment gateway for the most common cryptocurrencies (BTC, ETH, LTC) using [NestJS](https://nestjs.com/) and [Prisma](https://nestjs.com/).
 
 ## Installation
 
 ```bash
 $ pnpm install
+$ pnpm run setup
 ```
 
-Rename the `.env.example` file to `.env` and fill in the required environment variables.
+The API_KEY needs to be generated using `pnpm run setup`. Because is hashed with sha512, so, if you lost it, you will need generate a new one.
 
 ## Running the app
 
@@ -54,7 +55,7 @@ The server is available at `http://localhost:3000`  (Or in the port that you set
  - `FAILED`: The payment is failed.
 
 ### Endpoints:
-All endpoints require `X-API-KEY` header with the value `API_KEY` that is defined in the `.env` file.
+**All endpoints require `X-API-KEY` header. You can generate it using `pnpm run setup`**
 
 - #### GET /api/orders
 Get a list of all the orders.
@@ -62,8 +63,9 @@ Get a list of all the orders.
 Parameters:
 - `page`: The page number to retrieve. Defaults to 1.
 - `limit`: The number of orders to retrieve per page. Defaults to 10.
-- `currency`: Optional. The currency to filter by.
 - `status`: Optional. The status to filter by.
+- `currency`: Optional. The currency to filter by.
+- `walletAddress`: Optional. The wallet address to filter by.
 #### Example response:
 ```json
 [
