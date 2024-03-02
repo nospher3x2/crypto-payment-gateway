@@ -1,8 +1,6 @@
-export class CreateWalletDto {
-  public readonly currency: string;
-}
+import { Currency, CurrencyNetworkMap } from '../enums';
 
-export class CreateWalletResponseDto {
-  public readonly address: string;
-  public readonly balance: number;
+export class CreateWalletDto {
+  public readonly currency: Currency;
+  public readonly network: CurrencyNetworkMap[this['currency']];
 }
