@@ -1,59 +1,128 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import { Currency, CurrencyNetwork } from '../enums';
+import { WalletCredentialDomain } from './wallet.credential';
 
 export class WalletDomain<T extends Currency> {
-  private readonly _id: string;
-  private readonly _address: string;
-  private readonly _currency: T;
-  private readonly _network: CurrencyNetwork<T>;
-  private _balance: number;
-  private _createdAt: Date;
-  private _updatedAt: Date;
+  readonly #id: string;
+  #address: string;
+  #currency: T;
+  #network: CurrencyNetwork<T>;
+  #balance: number;
+  #credentialId: string;
+  #createdAt: Date;
+  #updatedAt: Date;
 
   constructor(wallet: Partial<WalletDomain<T>>) {
     Object.assign(this, wallet);
-    if (!this._id) {
-      this._id = randomUUID();
+    if (!this.#id) {
+      this.#id = randomUUID();
     }
   }
 
-  get id(): string {
-    return this._id;
+  public get id(): string {
+    return this.#id;
   }
 
-  get address(): string {
-    return this._address;
+  public get address(): string {
+    return this.#address;
   }
 
-  get currency(): T {
-    return this._currency;
+  public set address(address: string) {
+    this.#address = address;
   }
 
-  get network(): CurrencyNetwork<T> {
-    return this._network;
+  public get currency(): T {
+    return this.#currency;
   }
 
-  get balance(): number {
-    return this._balance;
+  public set currency(currency: T) {
+    this.#currency = currency;
   }
 
-  set balance(balance: number) {
-    this._balance = balance;
+  public get network(): CurrencyNetwork<T> {
+    return this.#network;
   }
 
-  get createdAt(): Date {
-    return this._createdAt;
+  public set network(network: CurrencyNetwork<T>) {
+    this.#network = network;
   }
 
-  set createdAt(createdAt: Date) {
-    this._createdAt = createdAt;
+  public get balance(): number {
+    return this.#balance;
   }
 
-  get updatedAt(): Date {
-    return this._updatedAt;
+  public set balance(balance: number) {
+    this.#balance = balance;
   }
 
-  set updatedAt(updatedAt: Date) {
-    this._updatedAt = updatedAt;
+  public get credentialId(): string {
+    return this.#credentialId;
+  }
+
+  public set credentialId(credentialId: string) {
+    this.#credentialId = credentialId;
+  }
+
+  public get createdAt(): Date {
+    return this.#createdAt;
+  }
+
+  public set createdAt(createdAt: Date) {
+    this.#createdAt = createdAt;
+  }
+
+  public get updatedAt(): Date {
+    return this.#updatedAt;
+  }
+
+  public set updatedAt(updatedAt: Date) {
+    this.#updatedAt = updatedAt;
+  }
+
+  public toJSON(): Record<string, unknown> {
+    return {
+      id: this.id,
+      address: this.address,
+      currency: this.currency,
+      network: this.network,
+      balance: this.balance,
+      credentialId: this.credentialId,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
+
+  [Symbol.for('nodejs.util.inspect.custom')]() {
+    return this.toJSON();
+  }
+}
+
+export class WalletWithCredentialDomain<
+  T extends Currency,
+> extends WalletDomain<T> {
+  #credential: WalletCredentialDomain;
+
+  constructor(wallet: Partial<WalletWithCredentialDomain<T>>) {
+    super(wallet);
+    Object.assign(this, wallet);
+  }
+
+  public get credential(): WalletCredentialDomain {
+    return this.#credential;
+  }
+
+  public set credential(credential: WalletCredentialDomain) {
+    this.#credential = credential;
+  }
+
+  public toJSON(): Record<string, unknown> {
+    return {
+      ...super.toJSON(),
+      credential: this.credential.toJSON(),
+    };
+  }
+
+  [Symbol.for('nodejs.util.inspect.custom')]() {
+    return this.toJSON();
   }
 }

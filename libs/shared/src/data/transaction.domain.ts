@@ -1,65 +1,85 @@
 export class TransactionDomain {
-  private readonly _txid: string;
-  private _amount: number;
-  private _from: string;
-  private _confirmations: number;
-  private _orderId: string;
-  private _createdAt: Date;
-  private _updatedAt: Date;
+  #txid: string;
+  #amount: number;
+  #from: string;
+  #confirmations: number;
+  #orderId: string;
+  #createdAt: Date;
+  #updatedAt: Date;
 
   constructor(transaction: Partial<TransactionDomain>) {
     Object.assign(this, transaction);
   }
 
-  get txid(): string {
-    return this._txid;
+  public get txid(): string {
+    return this.#txid;
   }
 
-  get confirmations(): number {
-    return this._confirmations;
+  public set txid(txid: string) {
+    this.#txid = txid;
   }
 
-  set confirmations(confirmations: number) {
-    this._confirmations = confirmations;
+  public get confirmations(): number {
+    return this.#confirmations;
   }
 
-  get amount(): number {
-    return this._amount;
+  public set confirmations(confirmations: number) {
+    this.#confirmations = confirmations;
   }
 
-  set amount(amount: number) {
-    this._amount = amount;
+  public get amount(): number {
+    return this.#amount;
   }
 
-  get from(): string {
-    return this._from;
+  public set amount(amount: number) {
+    this.#amount = amount;
   }
 
-  set from(from: string) {
-    this._from = from;
+  public get from(): string {
+    return this.#from;
   }
 
-  get orderId(): string {
-    return this._orderId;
+  public set from(from: string) {
+    this.#from = from;
   }
 
-  set orderId(orderId: string) {
-    this._orderId = orderId;
+  public get orderId(): string {
+    return this.#orderId;
   }
 
-  get createdAt(): Date {
-    return this._createdAt;
+  public set orderId(orderId: string) {
+    this.#orderId = orderId;
   }
 
-  set createdAt(createdAt: Date) {
-    this._createdAt = createdAt;
+  public get createdAt(): Date {
+    return this.#createdAt;
   }
 
-  get updatedAt(): Date {
-    return this._updatedAt;
+  public set createdAt(createdAt: Date) {
+    this.#createdAt = createdAt;
   }
 
-  set updatedAt(updatedAt: Date) {
-    this._updatedAt = updatedAt;
+  public get updatedAt(): Date {
+    return this.#updatedAt;
+  }
+
+  public set updatedAt(updatedAt: Date) {
+    this.#updatedAt = updatedAt;
+  }
+
+  public toJSON(): Record<string, unknown> {
+    return {
+      txid: this.txid,
+      amount: this.amount,
+      from: this.from,
+      confirmations: this.confirmations,
+      orderId: this.orderId,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
+
+  [Symbol.for('nodejs.util.inspect.custom')]() {
+    return this.toJSON();
   }
 }
