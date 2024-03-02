@@ -1,163 +1,220 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import { Currency, OrderStatus } from '@prisma/client';
 import { TransactionDomain } from './transaction.domain';
 import { WalletDomain } from './wallet.domain';
 
 export class OrderDomain {
-  private readonly _id: string;
-  private _status: OrderStatus;
-  private _amount: number;
-  private _confirmations: number;
-  private _description: string;
-  private _walletId: string;
-  private _externalId: string;
-  private _expiresAt: Date;
-  private _createdAt: Date;
-  private _updatedAt: Date;
+  readonly #id: string;
+  #status: OrderStatus;
+  #amount: number;
+  #confirmations: number;
+  #description: string;
+  #walletId: string;
+  #externalId: string;
+  #expiresAt: Date;
+  #createdAt: Date;
+  #updatedAt: Date;
 
   constructor(order: Partial<OrderDomain>) {
     Object.assign(this, order);
 
-    if (this._id === undefined) {
-      this._id = randomUUID();
+    if (this.#id === undefined) {
+      this.#id = randomUUID();
     }
   }
 
-  get id(): string {
-    return this._id;
+  public get id(): string {
+    return this.#id;
   }
 
-  get status(): OrderStatus {
-    return this._status;
+  public get status(): OrderStatus {
+    return this.#status;
   }
 
-  set status(status: OrderStatus) {
-    this._status = status;
+  public set status(status: OrderStatus) {
+    this.#status = status;
   }
 
-  get amount(): number {
-    return this._amount;
+  public get amount(): number {
+    return this.#amount;
   }
 
-  set amount(amount: number) {
-    this._amount = amount;
+  public set amount(amount: number) {
+    this.#amount = amount;
   }
 
-  get confirmations(): number {
-    return this._confirmations;
+  public get confirmations(): number {
+    return this.#confirmations;
   }
 
-  set confirmations(confirmations: number) {
-    this._confirmations = confirmations;
+  public set confirmations(confirmations: number) {
+    this.#confirmations = confirmations;
   }
 
-  get description(): string {
-    return this._description;
+  public get description(): string {
+    return this.#description;
   }
 
-  set description(description: string) {
-    this._description = description;
+  public set description(description: string) {
+    this.#description = description;
   }
 
-  get walletId(): string {
-    return this._walletId;
+  public get walletId(): string {
+    return this.#walletId;
   }
 
-  set walletId(walletId: string) {
-    this._walletId = walletId;
+  public set walletId(walletId: string) {
+    this.#walletId = walletId;
   }
 
-  get externalId(): string {
-    return this._externalId;
+  public get externalId(): string {
+    return this.#externalId;
   }
 
-  set externalId(externalId: string) {
-    this._externalId = externalId;
+  public set externalId(externalId: string) {
+    this.#externalId = externalId;
   }
 
-  get expiresAt(): Date {
-    return this._expiresAt;
+  public get expiresAt(): Date {
+    return this.#expiresAt;
   }
 
-  set expiresAt(expiresAt: Date) {
-    this._expiresAt = expiresAt;
+  public set expiresAt(expiresAt: Date) {
+    this.#expiresAt = expiresAt;
   }
 
-  get createdAt(): Date {
-    return this._createdAt;
+  public get createdAt(): Date {
+    return this.#createdAt;
   }
 
-  set createdAt(createdAt: Date) {
-    this._createdAt = createdAt;
+  public set createdAt(createdAt: Date) {
+    this.#createdAt = createdAt;
   }
 
-  get updatedAt(): Date {
-    return this._updatedAt;
+  public get updatedAt(): Date {
+    return this.#updatedAt;
   }
 
-  set updatedAt(updatedAt: Date) {
-    this._updatedAt = updatedAt;
+  public set updatedAt(updatedAt: Date) {
+    this.#updatedAt = updatedAt;
+  }
+
+  public toJSON(): Record<string, unknown> {
+    return {
+      id: this.id,
+      status: this.status,
+      amount: this.amount,
+      confirmations: this.confirmations,
+      description: this.description,
+      walletId: this.walletId,
+      externalId: this.externalId,
+      expiresAt: this.expiresAt,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
+
+  [Symbol.for('nodejs.util.inspect.custom')]() {
+    return this.toJSON();
   }
 }
 
 export class OrderWithWalletDomain<T extends Currency> extends OrderDomain {
-  private _wallet: WalletDomain<T>;
+  #wallet: WalletDomain<T>;
 
   constructor(order: Partial<OrderWithWalletDomain<T>>) {
     super(order);
     Object.assign(this, order);
   }
 
-  get wallet(): WalletDomain<T> {
-    return this._wallet;
+  public get wallet(): WalletDomain<T> {
+    return this.#wallet;
   }
 
-  set wallet(wallet: WalletDomain<T>) {
-    this._wallet = wallet;
+  public set wallet(wallet: WalletDomain<T>) {
+    this.#wallet = wallet;
+  }
+
+  public toJSON(): Record<string, unknown> {
+    return {
+      ...super.toJSON(),
+      walletId: this.wallet.id,
+    };
+  }
+
+  [Symbol.for('nodejs.util.inspect.custom')]() {
+    return this.toJSON();
   }
 }
 
 export class OrderWithTransactionsDomain extends OrderDomain {
-  private _transactions: TransactionDomain[];
+  #transactions: TransactionDomain[];
 
   constructor(order: Partial<OrderWithTransactionsDomain>) {
     super(order);
-    this._transactions = order.transactions || [];
+    this.#transactions = order.transactions || [];
   }
 
-  get transactions(): TransactionDomain[] {
-    return this._transactions;
+  public get transactions(): TransactionDomain[] {
+    return this.#transactions;
   }
 
-  set transactions(transactions: TransactionDomain[]) {
-    this._transactions = transactions;
+  public set transactions(transactions: TransactionDomain[]) {
+    this.#transactions = transactions;
+  }
+
+  public toJSON(): Record<string, unknown> {
+    return {
+      ...super.toJSON(),
+      transactions: this.transactions.map((transaction) =>
+        transaction.toJSON(),
+      ),
+    };
+  }
+
+  [Symbol.for('nodejs.util.inspect.custom')]() {
+    return this.toJSON();
   }
 }
 
 export class OrderWithWalletAndTransactionsDomain<
   T extends Currency,
 > extends OrderDomain {
-  private _wallet: WalletDomain<T>;
-  private _transactions: TransactionDomain[];
+  #wallet: WalletDomain<T>;
+  #transactions: TransactionDomain[];
 
   constructor(order: Partial<OrderWithWalletAndTransactionsDomain<T>>) {
     super(order);
     Object.assign(this, order);
   }
 
-  get wallet(): WalletDomain<T> {
-    return this._wallet;
+  public get wallet(): WalletDomain<T> {
+    return this.#wallet;
   }
 
-  set wallet(wallet: WalletDomain<T>) {
-    this._wallet = wallet;
+  public set wallet(wallet: WalletDomain<T>) {
+    this.#wallet = wallet;
   }
 
-  get transactions(): TransactionDomain[] {
-    return this._transactions;
+  public get transactions(): TransactionDomain[] {
+    return this.#transactions;
   }
 
-  set transactions(transactions: TransactionDomain[]) {
-    this._transactions = transactions;
+  public set transactions(transactions: TransactionDomain[]) {
+    this.#transactions = transactions;
+  }
+
+  public toJSON(): Record<string, unknown> {
+    return {
+      ...super.toJSON(),
+      wallet: this.wallet.toJSON(),
+      transactions: this.transactions.map((transaction) =>
+        transaction.toJSON(),
+      ),
+    };
+  }
+
+  [Symbol.for('nodejs.util.inspect.custom')]() {
+    return this.toJSON();
   }
 }
