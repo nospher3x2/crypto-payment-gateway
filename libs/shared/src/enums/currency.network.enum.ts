@@ -1,7 +1,7 @@
 import { Currency } from './currency.enum';
 
 export type CurrencyNetworkMap = {
-  BTC: 'bitcoin' | 'bitcoincash' | 'bnb';
+  BTC: 'bitcoin' | 'regtest' | 'testnet';
   ETH: 'ethereum';
   LTC: 'litecoin';
 };
