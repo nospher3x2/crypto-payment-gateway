@@ -12,6 +12,8 @@
   },
   "moduleNameMapper": {
     "@app/shared/(.*)": "<rootDir>/../libs/shared/src/$1",
-    "@app/shared": "<rootDir>/../libs/shared/src"
+    "@app/shared": "<rootDir>/../libs/shared/src",
+    "@app/crypto-provider/(.*)": "<rootDir>/../libs/crypto-provider/src/$1",
+    "@app/crypto-provider": "<rootDir>/../libs/crypto-provider/src"
   }
 }

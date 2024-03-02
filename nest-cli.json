@@ -15,6 +15,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/shared/tsconfig.lib.json"
       }
+    },
+    "crypto-provider": {
+      "type": "library",
+      "root": "libs/crypto-provider",
+      "entryFile": "index",
+      "sourceRoot": "libs/crypto-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/crypto-provider/tsconfig.lib.json"
+      }
     }
   }
 }

@@ -23,6 +23,12 @@
       ],
       "@app/shared/*": [
         "libs/shared/src/*"
+      ],
+      "@app/crypto-provider": [
+        "libs/crypto-provider/src"
+      ],
+      "@app/crypto-provider/*": [
+        "libs/crypto-provider/src/*"
       ]
     }
   }
