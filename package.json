@@ -8,6 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
+    "setup": "pnpm run setup:prisma && node scripts/setup.js",
+    "setup:prisma": "npx prisma generate",
     "start": "nest start --NODE_ENV=development",
     "start:dev": "nest start --watch --NODE_ENV=development",
     "start:debug": "nest start --debug --watch",
@@ -23,9 +25,10 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
-    "@prisma/client": "^5.10.2",
+    "@prisma/client": "^5.13.0",
     "bitcoinjs-lib": "^6.1.5",
     "ecpair": "^2.1.0",
+    "prisma": "^5.13.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "tiny-secp256k1": "^2.2.3"
