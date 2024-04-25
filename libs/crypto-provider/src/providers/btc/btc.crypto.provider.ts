@@ -9,15 +9,22 @@ import {
   testnet,
 } from 'bitcoinjs-lib/src/networks';
 import ECPairFactory from 'ecpair';
+import { ProviderNetworkNotFoundException } from '@app/crypto-provider/exceptions/provider-network-not-found.exception';
+import { CurrencyNetwork } from '@app/shared';
 const ECPair = ECPairFactory(ecc);
 @Injectable()
 export class BtcCryptoProvider extends CryptoProvider<'BTC'> {
+  private readonly networkData: Network;
+  constructor(network: CurrencyNetwork<'BTC'>) {
+    super(network);
+    this.networkData = this.getNetwork();
+  }
+
   public async createRandomWallet(): Promise<CreateRandomWalletOutput<'BTC'>> {
-    const network = this.getNetwork();
-    const keyPair = ECPair.makeRandom({ network });
+    const keyPair = ECPair.makeRandom({ network: this.networkData });
     const p2wpkh = bitcoin.payments.p2wpkh({
       pubkey: keyPair.publicKey,
-      network,
+      network: this.networkData,
     });
 
     if (!p2wpkh || !p2wpkh.address) {
@@ -41,7 +48,7 @@ export class BtcCryptoProvider extends CryptoProvider<'BTC'> {
       case 'testnet':
         return testnet;
       default:
-        throw new Error(`Unknown network ${this.network}`);
+        throw new ProviderNetworkNotFoundException('BTC', this.network);
     }
   }
 }
