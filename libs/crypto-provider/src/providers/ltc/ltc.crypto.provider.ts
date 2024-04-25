@@ -4,6 +4,7 @@ import * as bitcoin from 'bitcoinjs-lib';
 import * as ecc from 'tiny-secp256k1';
 import ECPairFactory from 'ecpair';
 import { Network } from 'bitcoinjs-lib';
+import { ProviderNetworkNotFoundException } from '@app/crypto-provider/exceptions/provider-network-not-found.exception';
 
 const ECPair = ECPairFactory(ecc);
 @Injectable()
@@ -11,20 +12,20 @@ export class LtcCryptoProvider extends CryptoProvider<'LTC'> {
   public async createRandomWallet(): Promise<CreateRandomWalletOutput<'LTC'>> {
     const network = this.getNetwork();
     const keyPair = ECPair.makeRandom({ network });
-    const { address } = bitcoin.payments.p2pkh({
+    const p2pkh = bitcoin.payments.p2pkh({
       pubkey: keyPair.publicKey,
       network: network,
     });
 
-    if (!address || !address.startsWith('L')) {
+    if (!p2pkh || !p2pkh.address) {
       throw new Error('Failed to create address');
     }
 
     return {
       currency: 'LTC',
       network: this.network,
-      walletAddress: 'address',
-      walletPrivateKey: 'keyPair.toWIF()',
+      walletAddress: p2pkh.address,
+      walletPrivateKey: keyPair.toWIF(),
     };
   }
 
@@ -43,7 +44,7 @@ export class LtcCryptoProvider extends CryptoProvider<'LTC'> {
           wif: 0xb0,
         };
       default:
-        throw new Error(`Unknown network ${this.network}`);
+        throw new ProviderNetworkNotFoundException('LTC', this.network);
     }
   }
 }
